@@ -12,12 +12,15 @@ type Props = {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
+  const isDev = process.env.NODE_ENV === "development";
   const params: { slug: string[] }[] = [];
   for (const article of knowledgeData.articles) {
     const parts = article.slug.split("/");
     params.push({ slug: parts });
-    params.push({ slug: parts.map((p) => encodeURIComponent(p)) });
-    params.push({ slug: parts.map((p) => decodeURIComponent(p)) });
+    if (isDev) {
+      params.push({ slug: parts.map((p) => encodeURIComponent(p)) });
+      params.push({ slug: parts.map((p) => decodeURIComponent(p)) });
+    }
   }
   return params;
 }
