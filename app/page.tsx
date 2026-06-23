@@ -1,6 +1,6 @@
 import KnowledgeFinder from "@/components/KnowledgeFinder";
 import { knowledgeData } from "@/lib/knowledge";
-import { BookOpen, HeartPulse } from "lucide-react";
+import { HeartPulse } from "lucide-react";
 import { Suspense } from "react";
 
 export default function Home() {
@@ -14,9 +14,6 @@ export default function Home() {
             </span>
             <span>Smart BKPA</span>
           </div>
-          <a className="navlink" href="#finder">
-            রোগীভিত্তিক জ্ঞান খুঁজুন
-          </a>
         </div>
       </header>
 
@@ -45,9 +42,7 @@ export default function Home() {
 
       <main className="main" id="finder">
         <div className="profile">
-          <h2>
-            <BookOpen size={20} aria-hidden="true" /> দ্রুত শুরু করুন
-          </h2>
+          <h2>দ্রুত শুরু করুন</h2>
           <p>
             আপনার অবস্থা অনুযায়ী কয়েকটি ট্যাগ বেছে নিন। যেমন উচ্চ রক্তচাপ + CKD
             স্টেজ ৩ + ডায়েট দিলে শুধু সংশ্লিষ্ট লেখাগুলো উপরে আসবে।

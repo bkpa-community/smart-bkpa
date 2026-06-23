@@ -26,6 +26,7 @@ body {
   margin: 0;
   font-family: "Noto Sans Bengali", "Noto Sans", "Segoe UI", system-ui, sans-serif;
   line-height: 1.65;
+  overflow-x: hidden;
 }
 
 a {
@@ -142,13 +143,19 @@ input {
 .main {
   margin: 0 auto;
   max-width: 1180px;
+  overflow-x: clip;
   padding: 28px 20px 60px;
 }
 
 .finder {
   display: grid;
   gap: 20px;
-  grid-template-columns: 330px minmax(0, 1fr);
+  grid-template-columns: clamp(240px, 26%, 330px) minmax(0, 1fr);
+}
+
+/* Prevent grid children from overflowing their tracks */
+.finder > * {
+  min-width: 0;
 }
 
 .filters {
@@ -159,6 +166,11 @@ input {
   box-shadow: var(--shadow);
   position: sticky;
   top: 82px;
+}
+
+/* Mobile filter toggle button — hidden on desktop */
+.filters-toggle {
+  display: none;
 }
 
 .filters-header,
@@ -425,6 +437,7 @@ input {
   border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: var(--shadow);
+  max-width: 100%;
   overflow: hidden;
 }
 
@@ -436,6 +449,8 @@ input {
   border-bottom: 1px solid var(--line);
   display: grid;
   gap: 10px;
+  max-width: 100%;
+  overflow: hidden;
   padding: 18px;
 }
 
@@ -460,12 +475,14 @@ input {
   font-size: 1.25rem;
   line-height: 1.35;
   margin: 0;
+  overflow-wrap: break-word;
   transition: 0.16s ease;
 }
 
 .article-card p {
   color: #475467;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .tagline {
@@ -558,7 +575,6 @@ input {
 
 @media (max-width: 920px) {
   .hero-inner,
-  .finder,
   .smart-strip {
     grid-template-columns: 1fr;
   }
@@ -568,8 +584,44 @@ input {
     padding: 46px 20px;
   }
 
+  /* Single-column layout on mobile */
+  .finder {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Show the toggle button */
+  .filters-toggle {
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    display: flex;
+    font-size: 1rem;
+    font-weight: 700;
+    gap: 10px;
+    justify-content: space-between;
+    padding: 14px 18px;
+    width: 100%;
+  }
+
+  .filters-toggle:hover {
+    border-color: var(--brand);
+  }
+
+  /* Sidebar hidden by default on mobile, shown when toggled */
   .filters {
+    display: none;
     position: static;
+  }
+
+  .filters.filters--open {
+    display: block;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: none;
+    box-shadow: none;
   }
 
   .smart-actions {

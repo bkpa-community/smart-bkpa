@@ -8,10 +8,18 @@ type Props = {
   params: Promise<{ slug: string[] }>;
 };
 
+// Any slug not listed in generateStaticParams returns 404 (required for output: "export")
+export const dynamicParams = false;
+
 export function generateStaticParams() {
-  return knowledgeData.articles.map((article) => ({
-    slug: article.slug.split("/")
-  }));
+  const params: { slug: string[] }[] = [];
+  for (const article of knowledgeData.articles) {
+    const parts = article.slug.split("/");
+    params.push({ slug: parts });
+    params.push({ slug: parts.map((p) => encodeURIComponent(p)) });
+    params.push({ slug: parts.map((p) => decodeURIComponent(p)) });
+  }
+  return params;
 }
 
 export async function generateMetadata({ params }: Props) {

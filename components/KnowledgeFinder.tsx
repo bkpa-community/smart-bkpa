@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Activity, ChevronDown, Filter, Search, SlidersHorizontal, X } from "lucide-react";
 import {
   filterGroupHints,
@@ -57,6 +57,8 @@ export default function KnowledgeFinder() {
   const selected = useMemo(() => selectedFromParams(searchParams), [searchParams]);
   const articleQuery = searchParams.toString();
 
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
   const counts = useMemo(() => buildCounts(knowledgeData.articles), []);
   const activeCount = Object.values(selected).reduce((sum, values) => sum + values.length, 0);
   const hasActiveContext = activeCount > 0 || Boolean(query.trim());
@@ -107,12 +109,33 @@ export default function KnowledgeFinder() {
 
   return (
     <div className="finder">
-      <aside className="filters" aria-label="ফিল্টার">
+      <button
+        className="filters-toggle"
+        type="button"
+        aria-expanded={filtersOpen}
+        onClick={() => setFiltersOpen((prev) => !prev)}
+      >
+        <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+          <SlidersHorizontal size={18} aria-hidden="true" />
+          ফিল্টার
+          {activeCount > 0 && (
+            <span className="selected-count">{activeCount}</span>
+          )}
+        </span>
+        <ChevronDown
+          className="filters-toggle-icon"
+          size={18}
+          aria-hidden="true"
+          style={{ transform: filtersOpen ? "rotate(180deg)" : undefined }}
+        />
+      </button>
+
+      <aside className={`filters${filtersOpen ? " filters--open" : ""}`} aria-label="ফিল্টার">
         <div className="filters-header">
           <h2>
             <SlidersHorizontal size={18} aria-hidden="true" /> ফিল্টার
           </h2>
-          <p>{activeCount ? `${activeCount}টি ফিল্টার চালু আছে` : "রোগীর প্রোফাইল বানিয়ে শুরু করুন"}</p>
+          <p>{activeCount ? `${activeCount}টি ফিল্টার চালু আছে` : "রোগীর প্রোফাইল বানিয়ে শুরু করুন"}</p>
           {activeCount > 0 || query ? (
             <button className="clear-btn" type="button" onClick={clearAll}>
               সব মুছুন
