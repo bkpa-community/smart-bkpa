@@ -6,7 +6,6 @@ import { findArticleBySlug, knowledgeData } from "@/lib/knowledge";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export function generateStaticParams() {
@@ -27,18 +26,13 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default async function KnowledgeArticlePage({ params, searchParams }: Props) {
+export default async function KnowledgeArticlePage({ params }: Props) {
   const { slug } = await params;
-  const rawSearchParams = await searchParams;
   const article = findArticleBySlug(decodeURIComponent(slug.join("/")));
 
   if (!article) notFound();
 
-  const backParams = new URLSearchParams();
-  for (const [key, value] of Object.entries(rawSearchParams)) {
-    if (typeof value === "string" && value) backParams.set(key, value);
-  }
-  const backHref = backParams.toString() ? `/?${backParams.toString()}#finder` : "/#finder";
+  const backHref = "/#finder";
 
   const tags = [
     article.categoryLabelBn,
